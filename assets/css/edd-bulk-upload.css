@@ -1,0 +1,872 @@
+.edd-drag-drop-area {
+    border: 3px dashed #0073aa; /* WordPress blue for border */
+    padding: 40px;
+    text-align: center;
+    background-color: #f0f8ff; /* Light blue background */
+    border-radius: 10px; /* Smooth corners */
+    transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
+    position: relative;
+    color: #333;
+}
+
+.edd-drag-drop-area.drag-over {
+    background-color: #e0f7ff;
+    border-color: #005885;
+}
+
+.edd-drag-drop-area p {
+    font-size: 1.25em;
+    color: #005885;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+/* Hide the file input */
+#edd-file-upload {
+    display: none;
+}
+
+/* Style the label as a button */
+.edd-upload-label {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 1em;
+    color: #ffffff;
+    background-color: #0073aa;
+    border: 2px solid #0073aa;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
+}
+
+.edd-upload-label:hover {
+    background-color: #005885; /* Darker blue on hover */
+    border-color: #005885;
+}
+
+.edd-upload-label:focus {
+    outline: none; /* Remove default focus outline */
+    background-color: #ff9900; /* Highlight background color on focus */
+    border-color: #ff9900;
+}
+
+
+
+
+.edd-upload-list h3 {
+color:#4caf50;
+margin-bottom:10px
+}
+
+.edd-upload-list table {
+width:100%;
+border-collapse:collapse
+}
+
+.edd-upload-list th,.edd-upload-list td {
+padding:10px;
+border:1px solid #ddd
+}
+
+.edd-upload-list th {
+background-color:#f1f8e9
+}
+
+.edd-upload-list .upload-status {
+font-weight:700
+}
+
+.upload-progress {
+width:100%;
+height:10px
+}
+
+.edd-action-buttons {
+margin-top:20px;
+margin-top:20px
+}
+
+.edd-action-buttons .button {
+margin-right:10px;
+margin-right:10px
+}
+
+.edd-csv-action-content {
+margin-top:20px;
+padding:20px;
+border:1px solid #4caf50;
+background-color:#f9fff0;
+border-radius:10px
+}
+
+.edd-loading-modal {
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background-color:#00000080;
+display:flex;
+justify-content:center;
+align-items:center;
+z-index:9999
+}
+
+.edd-modal-content {
+background-color:#fff;
+padding:20px;
+border-radius:8px;
+text-align:center;
+box-shadow:0 0 15px #0000004d
+}
+
+.spinner {
+width:50px;
+height:50px;
+border:5px solid #f3f3f3;
+border-top:5px solid #3498db;
+border-radius:50%;
+animation:spin 1s linear infinite;
+margin:20px auto
+}
+
+.edd-upload-list,.button-primary {
+margin-top:20px
+}
+
+@keyframes spin {
+0% {
+transform:rotate(0deg)
+}
+
+100% {
+transform:rotate(360deg)
+}
+}
+
+.switch {
+position:relative;
+display:inline-block;
+width:50px;
+height:24px
+}
+
+.switch input {
+opacity:0;
+width:0;
+height:0
+}
+
+.slider {
+position:absolute;
+cursor:pointer;
+top:0;
+left:0;
+right:0;
+bottom:0;
+background-color:#ccc;
+transition:.4s;
+border-radius:24px
+}
+
+.slider:before {
+position:absolute;
+content:"";
+height:18px;
+width:18px;
+left:3px;
+bottom:3px;
+background-color:#fff;
+transition:.4s;
+border-radius:50%
+}
+
+input:checked + .slider {
+background-color:#4caf50
+}
+
+input:checked + .slider:before {
+transform:translateX(26px)
+}
+
+.switch input:focus + .slider {
+box-shadow:0 0 1px #4caf50
+}
+
+.switch input:disabled + .slider {
+background-color:#e0e0e0;
+cursor:not-allowed
+}
+
+#generate-import-button-form button#edd-generate-import-file {
+font-size:20px;
+padding:1em 2em
+}
+
+
+
+.edd-upload-list .thumbnail-column img {
+width:100px;
+height:auto;
+display:block;
+margin:0 auto
+}
+
+.edd-upload-list .file-url {
+line-height:1.5
+}
+
+#add-tags-form button#remove-tags-button,#remove-category-button {
+padding:10px;
+background-color:red;
+color:#fff;
+border:none;
+border-radius:4px;
+font-size:14px;
+cursor:pointer
+}
+
+#add-tags-form button#remove-tags-button:hover,#remove-category-button:hover {
+background-color:#880808;
+}
+
+#add-tags-form,#add-category-form {
+margin-bottom:15px
+}
+
+#rename-prefix-container,#watermark-image-container {
+height:24px;
+vertical-align:middle
+}
+
+#watermark-image-container > label,#rename-prefix-container > label {
+vertical-align:middle
+}
+
+#file-name-prefix,#watermark-image-path {
+height:24px;
+min-height:24px
+}
+
+.halfWidthColLeft {
+width:48%;
+max-width:48%;
+margin:20px 10px 20px 20px;
+float:left
+}
+
+.halfWidthColRight {
+width:48%;
+max-width:48%;
+margin:20px 20px 20px 10px;
+float:left
+}
+
+.clearFix {
+clear:both
+}
+
+.edd-bulk-option-sections-containers {
+padding:1%;
+border:3px dashed #0073aa;
+border-radius:2em;
+margin:0 0 50px
+}
+
+input.title-input,input.category-input,input.price-input {
+    width: 100%;
+    margin: 5px 0;
+    padding: 2px 8px;
+    line-height: 2em;
+    border-radius: 5px;
+    border: 1px solid #8c8f94;
+}
+
+#edd-upload-tbody h5 {
+margin:0 0 5px;
+font-weight:600
+}
+
+.halfWidthColRight form {
+max-width:100%;
+font-family:Arial,sans-serif;
+background-color:#f9f9f9;
+padding:20px;
+border:1px solid #ddd;
+border-radius:8px;
+box-shadow:0 2px 4px #0000001a;
+margin-bottom:20px
+}
+
+.halfWidthColRight form input[type="text"],.halfWidthColRight form input[type="email"],.halfWidthColRight form textarea,.halfWidthColRight form input[type="file"] {
+width:100%;
+padding:10px;
+margin-top:5px;
+margin-bottom:15px;
+border:1px solid #ccc;
+border-radius:4px;
+box-sizing:border-box;
+font-size:14px
+}
+
+.halfWidthColRight form textarea {
+resize:vertical;
+min-height:100px
+}
+
+.halfWidthColRight form label {
+font-size:14px;
+margin-right:10px;
+display:inline-block;
+cursor:pointer
+}
+
+.halfWidthColRight form input[type="radio"] {
+margin-right:5px
+}
+
+.halfWidthColRight form button[type="submit"] {
+background-color:#0073aa;
+color:#fff;
+font-size:16px;
+padding:10px 20px;
+border:none;
+border-radius:4px;
+cursor:pointer;
+transition:background-color .3s ease
+}
+
+.halfWidthColRight div[style*="margin-bottom"] {
+font-size:16px;
+padding:10px;
+border-radius:4px;
+box-shadow:0 2px 4px #0000001a;
+margin-bottom:20px
+}
+
+.halfWidthColRight div[style*="color: red"] {
+background-color:#fbeaea;
+border:1px solid #f5c2c7;
+color:#b94a48
+}
+
+.halfWidthColRight div[style*="color: green"] {
+background-color:#eafbe9;
+border:1px solid #a1d3a1;
+color:#468847
+}
+
+.edd-bulk-intro-container {
+max-width:100%;
+padding:20px;
+background-color:#f9f9f9;
+border:1px solid #ddd;
+border-radius:8px;
+box-shadow:0 2px 4px #0000001a;
+margin:20px;
+font-family:Arial,sans-serif;
+line-height:1.6
+}
+
+.edd-bulk-intro-heading {
+font-size:24px;
+color:#333;
+margin-bottom:15px
+}
+
+.edd-bulk-intro-text {
+font-size:16px;
+color:#555;
+margin-bottom:20px
+}
+
+.edd-bulk-button {
+display:inline-block;
+text-align:center;
+background-color:#0073aa;
+color:#fff;
+text-decoration:none;
+padding:10px 15px;
+font-size:16px;
+border-radius:4px;
+transition:background-color .3s ease;
+box-shadow:0 2px 4px #0000001a;
+margin-right:20px
+}
+
+.edd-bulk-button:hover {
+background-color:#005a87;
+text-decoration:none;
+color:#fff
+}
+
+.edd-bulk-button:hover a {
+color:#fff
+}
+
+.edd-plugin-sound-check {
+width:auto;
+padding:20px;
+background-color:#f9f9f9;
+border:1px solid #ddd;
+border-radius:8px;
+box-shadow:0 2px 4px #0000001a;
+margin-bottom:20px;
+font-family:Arial,sans-serif
+}
+
+.edd-plugin-sound-check-heading {
+font-size:20px;
+color:#0073aa;
+margin-bottom:10px;
+font-weight:700
+}
+
+.edd-sound-check-list {
+margin:0;
+padding:0;
+list-style:none
+}
+
+.edd-sound-check-item {
+display:flex;
+align-items:center;
+padding:10px;
+border:1px solid #ddd;
+border-radius:4px;
+margin-bottom:10px;
+font-size:14px;
+color:#555
+}
+
+.edd-sound-check-item .check-icon {
+margin-right:10px;
+font-size:16px;
+font-weight:700
+}
+
+.edd-sound-check-item.success {
+border-color:#a1d3a1;
+background-color:#eafbe9;
+color:#468847
+}
+
+.edd-sound-check-item.fail {
+border-color:#f5c2c7;
+background-color:#fbeaea;
+color:#b94a48
+}
+
+.name-email-row {
+display:flex;
+gap:20px
+}
+
+.name-email-row p {
+flex:1;
+margin:0
+}
+
+#google-vision-image-options {
+padding:20px;
+background-color:#f9f9f9;
+border:1px solid #ddd;
+border-radius:8px;
+box-shadow:0 2px 4px #0000001a;
+font-family:Arial,sans-serif;
+line-height:1.6;
+margin-bottom:20px;
+display:flex;
+flex-wrap:wrap;
+gap:15px
+}
+
+#google-vision-image-options h3 {
+flex:0 0 100%;
+font-size:20px;
+color:#0073aa;
+margin-bottom:15px;
+font-weight:700
+}
+
+#google-vision-hints {
+flex:2;
+padding:10px;
+font-size:14px;
+border:1px solid #ccc;
+border-radius:4px;
+box-sizing:border-box
+}
+
+#google-vision-image-options button {
+flex:1;
+padding:10px;
+font-size:14px;
+color:#fff;
+background-color:#0073aa;
+border:none;
+border-radius:4px;
+text-align:center;
+cursor:not-allowed;
+opacity:.6;
+transition:background-color .3s ease,opacity .3s ease
+}
+
+#google-vision-image-options button:not([disabled]) {
+cursor:pointer;
+opacity:1
+}
+
+#google-vision-image-options p {
+font-size:12px;
+color:#777;
+margin-top:15px;
+line-height:1.5;
+text-align:justify
+}
+
+.eddBulkwrap {
+margin:20px;
+font-family:Arial,sans-serif;
+color:#333;
+line-height:1.6
+}
+
+.eddBulkwrap h1,.eddBulkwrap h2,.eddBulkwrap h3,.eddBulkwrap h4,.eddBulkwrap h5,.eddBulkwrap h6 {
+font-family:'Arial',sans-serif;
+color:#0073aa;
+font-weight:700;
+margin-top:20px;
+margin-bottom:10px
+}
+
+.eddBulkwrap h1 {
+font-size:28px
+}
+
+.eddBulkwrap h2 {
+font-size:24px
+}
+
+.eddBulkwrap h3 {
+font-size:20px
+}
+
+.eddBulkwrap h4 {
+font-size:18px
+}
+
+.eddBulkwrap h5 {
+font-size:16px
+}
+
+.eddBulkwrap ul,.eddBulkwrap ol {
+font-size:14px;
+color:#555;
+margin-bottom:15px;
+padding-left:20px
+}
+
+.eddBulkwrap li {
+margin-bottom:10px
+}
+
+.eddBulkwrap table {
+width:100%;
+border-collapse:collapse;
+margin-bottom:20px;
+font-size:14px;
+color:#555
+}
+
+.eddBulkwrap table th,.eddBulkwrap table td {
+padding:10px;
+border:1px solid #ddd;
+text-align:left
+}
+
+.eddBulkwrap table th {
+background-color:#f4f4f4;
+font-weight:700
+}
+
+.eddBulkwrap a {
+color:#0073aa;
+text-decoration:none
+}
+
+.eddBulkwrap a:hover {
+text-decoration:underline
+}
+
+#eddBulkContentControlsContainer {
+font-family:Arial,sans-serif;
+color:#333
+}
+
+#eddBulkContentControlsContainer h3 {
+font-size:20px;
+color:#0073aa;
+font-weight:700;
+margin-bottom:15px
+}
+
+#vision-hints-section label {
+font-size:14px;
+font-weight:700;
+color:#555;
+margin-bottom:5px;
+display:inline-block;
+}
+
+#eddBulkContentControlsContainer label {
+font-size:14px;
+font-weight:700;
+color:#555;
+margin-bottom:5px;
+display:block;
+}
+
+#eddBulkContentControlsContainer input[type="text"],#eddBulkContentControlsContainer input[type="number"] {
+width:100%;
+padding:10px;
+font-size:14px;
+border:1px solid #ccc;
+border-radius:4px;
+box-sizing:border-box;
+margin-bottom:15px;
+}
+
+#eddBulkContentControlsContainer input::placeholder {
+color:#aaa;
+font-style:italic;
+}
+
+#eddBulkContentControlsContainer button {
+font-size:14px;
+font-weight:700;
+padding:10px;
+border-radius:5px;
+cursor:pointer;
+}
+
+.action-container {
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:10px;
+}
+
+.trash-can-button {
+background-color:transparent;
+border:none;
+cursor:pointer;
+font-size:16px;
+}
+
+.trash-can-button:hover {
+color:red;
+}
+
+.bulkActionSelections {
+margin:0;
+}
+
+.edd_bulk_upload_delete_popup {
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+background-color:#fff;
+border:1px solid #ccc;
+border-radius:5px;
+box-shadow:0 2px 10px #0000001a;
+padding:20px;
+z-index:1000;
+text-align:center;
+width:300px;
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+background-color:#fff;
+border:1px solid #ccc;
+border-radius:5px;
+box-shadow:0 2px 10px #0000001a;
+padding:20px;
+z-index:1000;
+text-align:center;
+width:300px
+}
+
+.edd_bulk_upload_delete_popup p {
+font-size:16px;
+margin-bottom:15px
+}
+
+.edd_bulk_upload_delete_popup button {
+margin:0 10px;
+padding:10px 20px;
+font-size:14px;
+border:none;
+border-radius:3px;
+cursor:pointer
+}
+
+.edd_bulk_upload_popup_yes {
+background-color:#d9534f;
+color:#fff
+}
+
+.edd_bulk_upload_popup_cancel {
+background-color:#5bc0de;
+color:#fff
+}
+
+#add-tags-form,#add-category-form,#bulk-update-prices-form,#generate-import-button-form{
+width:23%;
+display:inline-block;
+margin-right:20px;
+vertical-align:top
+}
+
+
+
+#add-tags-form input#add-tags-input,#add-tags-form input#remove-tags-input,#bulk-update-prices-form input#bulk-update-prices-input,#add-category-form input#add-category-input,#add-category-form input#remove-category-input {
+padding:5px 10px;
+margin-right:5px;
+border:1px solid #ccc;
+border-radius:4px;
+font-size:14px;
+width:200px
+}
+
+#eddBulkContentControlsContainer button {
+padding:10px;
+background-color:#0073aa;
+color:#fff;
+border:none;
+border-radius:4px;
+font-size:14px;
+cursor:pointer
+}
+
+#add-tags-form button#add-tags-button:hover,#bulk-update-prices-form button#bulk-update-prices-button:hover,.halfWidthColRight form button[type="submit"]:hover,#google-vision-image-options button:not([disabled]):hover {
+background-color:#005a87
+}
+
+.halfWidthColRight form input[type="file"],.eddBulkwrap h6 {
+font-size:14px
+}
+
+.edd-plugin-sound-check-description,.eddBulkwrap p {
+font-size:14px;
+color:#555;
+margin-bottom:15px
+}
+
+#edd-drag-drop-area p {
+    font-size: 20px;
+    color: #0073aa;
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+#edd-csv-action-content .edd-action-buttons a,#edd-proceed-to-import {
+    font-size:20px;
+    padding:20px;
+}
+
+#edd-proceed-to-import,#edd-generate-import-file {
+    background-color:#3b8132;
+    color:white;
+}
+
+#edd-proceed-to-import:hover,#edd-generate-import-file:hover {
+    background-color:#46923c;
+}
+
+#edd-generate-import-file {
+    width:100%;
+}
+
+#google_vision_api_key,#openai_api_key {
+    width:20em;
+} 
+
+.button-danger {
+    background-color:red!important;
+    border-color:red!important;
+    color:white!important;
+}
+
+.button-danger:hover {
+    background-color:#880808!important;
+    border-color: #880808!important;
+    color:white!important;
+}
+
+.lockedForPremiumSection {
+    opacity:0.5;
+}
+
+table.edd-upload-list > thead > tr > th:nth-child(1) {
+ text-align:center;
+}
+
+#eddBulkContentControlsContainer button.removeButtons {
+    background-color: red;
+    color:#fff;
+}
+
+#eddBulkContentControlsContainer button.removeButtons:hover {
+    background-color: #880808;
+    color:#fff;
+}
+
+.edd_bulk_lite_upload_delete_popup_overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.edd_bulk_lite_upload_delete_popup {
+    background: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.edd_bulk_lite_upload_delete_popup button {
+    margin: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+
+#generate-import-button-form {
+    display:block;
+}
+
+#edd-csv-action-content {
+    width:auto;
+    text-align: center;
+}
+
+#edd-proceed-to-import {
+    width:100%;
+    text-align: center;
+}
+
+button#edd-proceed-to-import {
+    font-size: 3em!important;
+    background-color: green!important;
+}
