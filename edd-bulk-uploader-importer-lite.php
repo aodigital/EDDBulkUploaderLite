@@ -3,12 +3,12 @@
  * Plugin Name: Bulk Uploader & Importer for Easy Digital Downloads - Lite
  * Plugin URI: https://wordpress.org/plugins/edd-bulk-uploader-importer
  * Description: Bulk upload images and videos to create Easy Digital Downloads items quickly. Includes tools for managing tags, pricing & categories in bulk as well as integration with Amazon S3.  More advanced features are available in the premium version, get it <a target="_blank" href="https://aodigital.com.au/downloads/edd-bulk-uploader-importer-full/">here</a>
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Adam Langley
  * Author URI: https://aodigital.com.au
  * Requires at least: 6.0.0
  * Tested up to: 6.7.1
- * Stable tag: 1.0.0
+ * Stable tag: 1.0.1
  * Requires PHP: 8.0
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -34,7 +34,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define('EDD_BULK_LITE_PLUGIN_VERSION', '1.0.0');
+define('EDD_BULK_LITE_PLUGIN_VERSION', '1.0.1');
 
 global $wp_filesystem;
 

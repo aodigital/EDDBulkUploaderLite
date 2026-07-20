@@ -4,7 +4,7 @@ Tags: bulk upload, easy digital downloads, edd, importer
 Requires at least: 6.0.0
 Tested up to: 6.7.1
 Requires PHP: 8.0
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPL v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -55,6 +55,17 @@ Visit the [plugin page](https://aodigital.com.au/downloads/edd-bulk-uploader-imp
 Yes, the Lite version is fully functional for basic bulk management tasks. The premium version unlocks advanced tools and features for power users.
 
 == Changelog ==
+
+= 1.0.1 =
+* Security: added missing capability checks to the file upload/delete and CSV generation AJAX endpoints
+* Security: restricted the S3 upload endpoint to this site's own uploads directory
+* Security: hardened CSV file path handling against path traversal
+* Security: debug log now stored at an unguessable, access-restricted path instead of a predictable public URL
+* Fix: "Remove original file after S3 upload" now actually removes the original file
+* Fix: CSV import no longer breaks on multi-line download descriptions
+* Fix: PHP/JS debugging toggles now actually save (were silently failing due to a missing security token)
+* Compatibility: admin page links use `admin_url()` instead of hardcoded `/wp-admin/` paths
+* Compatibility: Font Awesome no longer loads on the public-facing site
 
 = 1.0.0 =
 * Initial release
