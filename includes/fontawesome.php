@@ -7,5 +7,4 @@ function edd_bulk_lite_add_font_awesome_to_head() {
         '5.15.4'
     );
 }
-add_action('wp_enqueue_scripts', 'edd_bulk_lite_add_font_awesome_to_head');
 add_action('admin_enqueue_scripts', 'edd_bulk_lite_add_font_awesome_to_head');

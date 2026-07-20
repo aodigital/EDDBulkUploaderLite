@@ -22,6 +22,9 @@ function edd_bulk_lite_upload_send_file_to_amazon_s3_callback() {
     $file_name    = isset($_POST['file_name'])    ? sanitize_file_name( wp_unslash($_POST['file_name']) ) : '';
     $file_type    = isset($_POST['file_type'])    ? sanitize_file_name( wp_unslash($_POST['file_type']) ) : '';
 
+    if (empty($download_url) || !edd_bulk_lite_upload_is_local_upload_url($download_url)) {
+        wp_send_json_error(['message' => 'Download URL must point to a file in this site\'s uploads directory.']);
+    }
 
     // Ensure the EDD Amazon S3 instance exists
     if (!function_exists('edd_amazon_s3') || !edd_amazon_s3()->has_api_keys()) {
@@ -47,6 +50,10 @@ function edd_bulk_lite_upload_send_file_to_amazon_s3_callback() {
         'type' => wp_check_filetype($file_name)['type'], // MIME type
     ];
 
+    // Resolve the download URL to an actual filesystem path so the
+    // file_exists()/wp_delete_file() calls below operate on a real path
+    // instead of a URL (file_exists() never returns true for http(s):// URLs).
+    $original_file_path = edd_bulk_lite_upload_resolve_safe_upload_file($download_url);
     try {
         // Upload the file to S3
         $upload_result = edd_amazon_s3()->upload_file($args);
@@ -54,11 +61,12 @@ function edd_bulk_lite_upload_send_file_to_amazon_s3_callback() {
 
         // Cleanup temporary file
         wp_delete_file($temp_file);
-      	
+
       	if (get_option('edd_bulk_lite_s3_remove_original_after_upload') === 'on') {
             // Proceed only if files are set to be removed
             if (file_exists($original_file_path)) {
                 $fileType = isset($_POST['file_type']) ? sanitize_file_name( wp_unslash($_POST['file_type']) ) : '';
+                $new_file_path = null;
                 if (strpos($fileType, 'video/') === 0) {
                     $new_file_path = $original_file_path;
                 } elseif (strpos($fileType, 'image/') === 0) {
@@ -71,6 +79,8 @@ function edd_bulk_lite_upload_send_file_to_amazon_s3_callback() {
 
                         // Glob pattern to find all matching variations except '-scaled-watermarked'
                         $pattern = $directory . '/' . $filename . '-*.' . $extension;
+                        $scaled_watermarked_path = null;
+                        $thumbnail_path = null;
 
                         foreach (glob($pattern) as $file) {
                             if (!str_contains($file, '-scaled-watermarked') && !str_contains($file, '-thumbnail')) {
@@ -78,10 +88,16 @@ function edd_bulk_lite_upload_send_file_to_amazon_s3_callback() {
                                 if (get_option('edd_bulk_lite_uploader_php_debugging') === 'on') {
                                     edd_bulk_lite_debug_log("Deleted variation: " . $file);
                                 }
+                            } elseif (str_contains($file, '-scaled-watermarked')) {
+                                $scaled_watermarked_path = $file;
                             } else {
-                                $new_file_path = $file; // Keep the '-scaled-watermarked' file
+                                $thumbnail_path = $file;
                             }
                         }
+
+                        // Prefer the full-size watermarked version over the thumbnail
+                        // for the attachment's primary file record.
+                        $new_file_path = $scaled_watermarked_path ?? $thumbnail_path;
                     } else {
                         $new_file_path = $original_file_path; // Retain original if watermarking is disabled
                     }

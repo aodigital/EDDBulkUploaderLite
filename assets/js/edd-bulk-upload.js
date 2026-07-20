@@ -373,7 +373,7 @@ jQuery(document).ready(function($) {
 			edd_bulk_lite_upload_toggleGenerateTagsButtonState()
             $('#edd-generate-import-file').prop('disabled', true);
             $currentRow.find('.upload-status').text('Uploading to S3...').css('color', 'orange');
-            if (edd_bulk_lite_upload_vars.js_debugging === "1") {
+            if (edd_bulk_lite_upload_vars.js_debugging === 'on') {
                 console.log("S3 storage enabled. Initiating S3 upload for:", newFileName);
                 console.log("Renamed File Name:", newFileName);
                 console.log("Renamed URL:", renamedUrl);
@@ -392,7 +392,7 @@ jQuery(document).ready(function($) {
                 success: function (s3Response) {
 					pendingProcesses --;
 					edd_bulk_lite_upload_toggleGenerateTagsButtonState()
-                    if (edd_bulk_lite_upload_vars.js_debugging === "1") {
+                    if (edd_bulk_lite_upload_vars.js_debugging === 'on') {
                         console.log("S3 upload response:", s3Response);
                     }
                     if (s3Response.success) {
@@ -422,8 +422,8 @@ jQuery(document).ready(function($) {
                         edd_bulk_lite_upload_toggleGenerateTagsButtonState();
                     } else {
                         $currentRow.find('.upload-status').text('Failed to upload to S3').css('color', 'red');
-                        if (edd_bulk_lite_upload_vars.js_debugging === "1") {
-                            console.error("S3 upload failed for file:", file.name, s3Response);
+                        if (edd_bulk_lite_upload_vars.js_debugging === 'on') {
+                            console.error("S3 upload failed for file:", newFileName, s3Response);
                         }
                         
                     }
@@ -432,8 +432,8 @@ jQuery(document).ready(function($) {
 					pendingProcesses --;
 					edd_bulk_lite_upload_toggleGenerateTagsButtonState()
                     $currentRow.find('.upload-status').text('Failed to upload to S3').css('color', 'red');
-                    if (edd_bulk_lite_upload_vars.js_debugging === "1") {
-                        console.error("S3 AJAX error for file:", file.name, textStatus, errorThrown);
+                    if (edd_bulk_lite_upload_vars.js_debugging === 'on') {
+                        console.error("S3 AJAX error for file:", newFileName, textStatus, errorThrown);
                     }
                     
                 },
@@ -500,7 +500,7 @@ jQuery(document).ready(function($) {
 					if (event.lengthComputable) {
 						let percentComplete = (event.loaded / event.total) * 100;
 						$row.find('.upload-progress').val(percentComplete);
-						if (edd_bulk_lite_upload_vars.js_debugging === "1") {
+						if (edd_bulk_lite_upload_vars.js_debugging === 'on') {
 							console.log(`Upload progress for ${newFileName}: ${percentComplete}%`);
 						}
 					}
@@ -508,13 +508,13 @@ jQuery(document).ready(function($) {
 				return xhr;
 			},
 			success: function (response) {
-				if (edd_bulk_lite_upload_vars.js_debugging === "1") {
+				if (edd_bulk_lite_upload_vars.js_debugging === 'on') {
 					console.log("AJAX success response:", response);
 				}
 
 				if (response.success && response.data.files.length > 0) {
 					let fileData = response.data.files[0];
-					if (edd_bulk_lite_upload_vars.js_debugging === "1") {
+					if (edd_bulk_lite_upload_vars.js_debugging === 'on') {
 						console.log("File data received:", fileData);
 					}
 
@@ -531,7 +531,7 @@ jQuery(document).ready(function($) {
 							let thumbnailUrl = fileData.thumbnail.replace(/^.*[\\/]/, `${baseDir}/`);
 							scaledUrl = fileData.scaled.replace(/^.*[\\/]/, `${baseDir}/`);
 							$currentRow.find('.thumbnail-column').html(`<img src="${thumbnailUrl}" alt="Thumbnail" style="width: 150px; height: auto;">`);
-							if (edd_bulk_lite_upload_vars.js_debugging === "1") {
+							if (edd_bulk_lite_upload_vars.js_debugging === 'on') {
 								console.log("Watermarking disabled, proceeding directly to check S3 settings");
 							}
 							// Call S3 upload function as-is
@@ -542,7 +542,7 @@ jQuery(document).ready(function($) {
 
 						} else if (fileType.startsWith('video/')) {
 							let videoPlaceholder = String(edd_bulk_lite_upload_vars.pluginUrl) + 'assets/images/video-placeholder.png';
-							if (edd_bulk_lite_upload_vars.js_debugging === "1") {
+							if (edd_bulk_lite_upload_vars.js_debugging === 'on') {
 								console.log("Video Placeholder Filepath:", videoPlaceholder);
 							}
 							scaledUrl = originalUrl;
@@ -557,12 +557,12 @@ jQuery(document).ready(function($) {
 
 						$currentRow.find('.upload-status').text('Uploaded').css('color', 'green');
 						$currentRow.find('.download-url').html(`<a href="${originalUrl}" target="_blank">${originalUrl}</a>`);
-						if (edd_bulk_lite_upload_vars.js_debugging === "1") {
+						if (edd_bulk_lite_upload_vars.js_debugging === 'on') {
 							console.log("File added to uploadedFiles array:", fileData.original);
 						}
 						uploadedFiles.push(fileData.original);
 					} else {
-						if (edd_bulk_lite_upload_vars.js_debugging === "1") {
+						if (edd_bulk_lite_upload_vars.js_debugging === 'on') {
 							console.error("File URL not retrieved for file:", file.name);
 						}
 						let $currentRow = pendingUploadsMap.get(uniqueId).$row;
@@ -571,7 +571,7 @@ jQuery(document).ready(function($) {
 				}
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
-				if (edd_bulk_lite_upload_vars.js_debugging === "1") {
+				if (edd_bulk_lite_upload_vars.js_debugging === 'on') {
 					console.error("AJAX error for file:", file.name, textStatus, errorThrown);
 				}
 				let $currentRow = pendingUploadsMap.get(uniqueId).$row;
@@ -583,7 +583,7 @@ jQuery(document).ready(function($) {
 				activeUploads--;
 
 				if (pendingUploadsMap.size === 0 && uploadedFiles.length > 0) {
-					if (edd_bulk_lite_upload_vars.js_debugging === "1") {
+					if (edd_bulk_lite_upload_vars.js_debugging === 'on') {
 						console.log('All uploads completed. Buttons are now enabled.');
 					}
 					$('#edd-generate-import-file').prop('disabled', false);
@@ -597,7 +597,7 @@ jQuery(document).ready(function($) {
 
 	// Main function to handle file uploads with queuing
 	function edd_bulk_lite_upload_handleFileUploads(files) {
-		if (edd_bulk_lite_upload_vars.js_debugging === "1") {
+		if (edd_bulk_lite_upload_vars.js_debugging === 'on') {
 			console.log("edd_bulk_lite_upload_vars: ", edd_bulk_lite_upload_vars);
 			console.log("Starting file upload process...", files);
 		}
@@ -607,13 +607,13 @@ jQuery(document).ready(function($) {
 
 		$.each(files, function (index, file) {
 			if (!file.type.startsWith('image/') && !file.type.startsWith('video/')) {
-				if (edd_bulk_lite_upload_vars.js_debugging === "1") {
+				if (edd_bulk_lite_upload_vars.js_debugging === 'on') {
 					console.error("Invalid file type for file:", file.name);
 				}
 				alert(`Invalid file type: ${file.name}. Only images and videos are allowed.`);
 				return true;
 			}
-			if (edd_bulk_lite_upload_vars.js_debugging === "1") {
+			if (edd_bulk_lite_upload_vars.js_debugging === 'on') {
 				console.log(`Processing file ${index + 1} of ${files.length}:`, file);
 				console.log(edd_bulk_lite_upload_vars);
 			}
@@ -624,7 +624,7 @@ jQuery(document).ready(function($) {
 
 			// Generate unique ID
 			let uniqueId = `upload-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
-			if (edd_bulk_lite_upload_vars.js_debugging === "1") {
+			if (edd_bulk_lite_upload_vars.js_debugging === 'on') {
 				console.log(`Generated unique ID: ${uniqueId}`);
 			}
 
@@ -646,7 +646,7 @@ jQuery(document).ready(function($) {
 				.append($('<td>').html('<span class="upload-status">In Queue</span><progress value="0" max="100" class="upload-progress"></progress>')); // Show "In Queue" here
 
 			$('#edd-upload-tbody').append($row);
-			if (edd_bulk_lite_upload_vars.js_debugging === "1") {
+			if (edd_bulk_lite_upload_vars.js_debugging === 'on') {
 				console.log("Added new row for file:", file.name);
 			}
 
@@ -659,7 +659,7 @@ jQuery(document).ready(function($) {
 			formData.append('action', 'edd_bulk_lite_upload_handle_file_uploads');
 			formData.append('edd_bulk_lite_upload_nonce', edd_bulk_lite_upload_vars.nonce);
 
-			if (edd_bulk_lite_upload_vars.js_debugging === "1") {
+			if (edd_bulk_lite_upload_vars.js_debugging === 'on') {
 				console.log("Inspecting FormData before queuing:");
 				for (let pair of formData.entries()) {
 					console.log(`${pair[0]}: ${pair[1]}`);

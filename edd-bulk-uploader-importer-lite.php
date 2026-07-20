@@ -183,7 +183,7 @@ function edd_bulk_lite_upload_enqueue_scripts($hook) {
             EDD_BULK_LITE_PLUGIN_VERSION,
         );
 
-        $js_debugging = get_option('edd_bulk_lite_uploader_js_debugging', 'off') === 'on' ? true : false;
+        $js_debugging = get_option('edd_bulk_lite_uploader_js_debugging', 'off');
         $edd_bulk_lite_enable_s3_storage = get_option('edd_bulk_lite_enable_s3_storage', 'off');
         $rename_enabled = get_option('edd_bulk_lite_upload_rename_enabled', '0');
         $rename_prefix = get_option('edd_bulk_lite_upload_rename_prefix', '0');

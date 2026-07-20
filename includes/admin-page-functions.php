@@ -4,6 +4,51 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+// Confirms a URL points at this site's own uploads directory before it's
+// ever handed to download_url(), so these endpoints can't be used to make
+// the server fetch arbitrary internal/external URLs (SSRF).
+function edd_bulk_lite_upload_is_local_upload_url($url) {
+    if (empty($url) || !is_string($url)) {
+        return false;
+    }
+    $uploads_baseurl = untrailingslashit(wp_upload_dir()['baseurl']);
+    $strip_scheme = function ($value) {
+        return preg_replace('#^https?://#i', '', $value);
+    };
+    return strpos($strip_scheme($url), $strip_scheme($uploads_baseurl)) === 0;
+}
+
+// Converts a client-supplied uploads URL or absolute filesystem path into a
+// validated absolute path, refusing anything that doesn't resolve to a real
+// file inside the uploads directory (anchored prefix check + realpath
+// containment, to stop path traversal via a crafted URL/path).
+function edd_bulk_lite_upload_resolve_safe_upload_file($url_or_path) {
+    $uploads_dir = wp_upload_dir();
+    $baseurl = untrailingslashit($uploads_dir['baseurl']);
+    $basedir = untrailingslashit($uploads_dir['basedir']);
+
+    if (empty($url_or_path) || !is_string($url_or_path)) {
+        return false;
+    }
+
+    if (strpos($url_or_path, $baseurl) === 0) {
+        $candidate_path = str_replace($baseurl, $basedir, $url_or_path);
+    } elseif (strpos($url_or_path, $basedir) === 0) {
+        $candidate_path = $url_or_path;
+    } else {
+        return false;
+    }
+
+    $real_path = realpath($candidate_path);
+    $real_basedir = realpath($basedir);
+
+    if ($real_path === false || $real_basedir === false || strpos($real_path, $real_basedir) !== 0) {
+        return false;
+    }
+
+    return $real_path;
+}
+
 // Option Saving Callbacks
 
 function edd_bulk_lite_upload_save_s3_storage_toggle_callback() {
@@ -100,10 +145,38 @@ function edd_bulk_lite_upload_update_js_debugging_toggle_callback() {
 }
 add_action('wp_ajax_edd_bulk_lite_upload_update_js_debugging_toggle', 'edd_bulk_lite_upload_update_js_debugging_toggle_callback');
 
+// Returns the path to the (unguessable, access-restricted) debug log file,
+// creating its containing directory and access-denial rules on first use.
+// Previously this logged to a fixed, predictable path directly under
+// wp-content/, which was fetchable over HTTP by anyone who guessed the URL.
+function edd_bulk_lite_upload_get_debug_log_path() {
+    $uploads_dir = wp_upload_dir();
+    $log_dir = trailingslashit($uploads_dir['basedir']) . 'bulk-edd-upload-import-files/';
+
+    if (!file_exists($log_dir)) {
+        wp_mkdir_p($log_dir);
+    }
+
+    if (!file_exists($log_dir . '.htaccess')) {
+        file_put_contents($log_dir . '.htaccess', "Require all denied\ndeny from all\n");
+    }
+    if (!file_exists($log_dir . 'index.php')) {
+        file_put_contents($log_dir . 'index.php', "<?php\n// Silence is golden.\n");
+    }
+
+    $log_suffix = get_option('edd_bulk_lite_debug_log_suffix');
+    if (!$log_suffix) {
+        $log_suffix = wp_generate_password(20, false, false);
+        update_option('edd_bulk_lite_debug_log_suffix', $log_suffix, false);
+    }
+
+    return $log_dir . 'edd-bulk-lite-debug-' . $log_suffix . '.log';
+}
+
 function edd_bulk_lite_debug_log($value) {
     // Define the path to the log file
-    $log_file = WP_CONTENT_DIR . '/edd_bulk_debug.log';
-    
+    $log_file = edd_bulk_lite_upload_get_debug_log_path();
+
     // Prepare the log entry
     $output = is_scalar($value) ? $value : wp_json_encode($value);
     $log_entry = "[" . gmdate('Y-m-d H:i:s') . "] " . $output . PHP_EOL;

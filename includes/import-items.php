@@ -18,15 +18,10 @@ function edd_bulk_lite_upload_confirm_import_callback()
     $offset = isset($_POST['offset']) ? intval($_POST['offset']) : 0;
     $chunk_size = isset($_POST['chunk_size']) ? intval($_POST['chunk_size']) : 5;
 
-    if (empty($csv_file_path) || strpos($csv_file_path, wp_upload_dir()['baseurl']) === false) {
+    $csv_file_path = edd_bulk_lite_upload_resolve_safe_upload_file($csv_file_path);
+
+    if (!$csv_file_path) {
         wp_send_json_error(['message' => 'CSV file path is missing or invalid.']);
-    }
-
-    $uploads_dir = wp_upload_dir();
-    $csv_file_path = str_replace($uploads_dir['baseurl'], $uploads_dir['basedir'], $csv_file_path);
-
-    if (!file_exists($csv_file_path)) {
-        wp_send_json_error(['message' => 'CSV file does not exist at the specified path.']);
     }
 
     $batch_id = get_option('current_batch_id', 'edd_bulk_lite_' . time());
@@ -48,48 +43,30 @@ function edd_bulk_lite_upload_confirm_import_callback()
             wp_send_json_error(['message' => 'Failed to read the CSV file.']);
         }
 
-        $lines = explode("\n", $csv_content); // Split content into lines
-        $headers = [];
         $rows = [];
-        $total_rows = 0;
         $current_row = 0;
 
-        if (!empty($lines)) {
-            // Get headers (first line)
-            $headers = str_getcsv(array_shift($lines));
+        $csv_rows = edd_bulk_lite_upload_parse_csv_string($csv_content);
+        $headers = array_shift($csv_rows); // Get headers from the first row
+        $total_rows = count($csv_rows);
 
-            // Calculate total rows (excluding blank rows)
-            foreach ($lines as $line) {
-                $row = str_getcsv($line);
-                if (!array_filter($row)) {
-                    continue; // Skip blank rows
-                }
-                $total_rows++;
+        // Process the rows with an offset and chunk size
+        foreach ($csv_rows as $data) {
+            if ($current_row < $offset) {
+                $current_row++;
+                continue;
             }
 
-            // Rewind equivalent: reset the line array
-            $lines = explode("\n", $csv_content);
-            array_shift($lines); // Skip the header row again
-
-            // Process the lines with an offset and chunk size
-            foreach ($lines as $line) {
-                $data = str_getcsv($line);
-
-                if ($current_row < $offset) {
-                    $current_row++;
-                    continue;
-                }
-
-                if (!array_filter($data)) {
-                    continue; // Skip blank rows
-                }
-
+            // Guard against malformed rows with a different column count
+            // than the header (array_combine() throws a ValueError on a
+            // mismatch as of PHP 8).
+            if (count($data) === count($headers)) {
                 $rows[] = array_combine($headers, $data);
-                $current_row++;
+            }
+            $current_row++;
 
-                if (count($rows) >= $chunk_size) {
-                    break; // Stop when the chunk size is reached
-                }
+            if (count($rows) >= $chunk_size) {
+                break; // Stop when the chunk size is reached
             }
         }
     } else {

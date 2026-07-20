@@ -6,8 +6,11 @@ if (!defined('ABSPATH')) {
 
 function edd_bulk_lite_upload_handle_file_uploads_callback()
 {
+    if (!current_user_can('manage_options')) {
+        wp_send_json_error(['message' => 'You are not authorized to perform this action.']);
+    }
     if (
-        !isset($_POST['edd_bulk_lite_upload_nonce']) || 
+        !isset($_POST['edd_bulk_lite_upload_nonce']) ||
         !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['edd_bulk_lite_upload_nonce'])), 'edd_bulk_lite_upload')
     ) {
         wp_send_json_error(['message' => 'Invalid nonce']);
@@ -97,8 +100,11 @@ function edd_bulk_lite_upload_handle_file_uploads_callback()
 add_action('wp_ajax_edd_bulk_lite_upload_handle_file_uploads', 'edd_bulk_lite_upload_handle_file_uploads_callback');
 
 function edd_bulk_lite_upload_delete_file() {
+    if (!current_user_can('manage_options')) {
+        wp_send_json_error(['message' => 'You are not authorized to perform this action.']);
+    }
     if (
-        !isset($_POST['edd_bulk_lite_upload_nonce']) || 
+        !isset($_POST['edd_bulk_lite_upload_nonce']) ||
         !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['edd_bulk_lite_upload_nonce'])), 'edd_bulk_lite_upload')
     ) {
         wp_send_json_error(['message' => 'Invalid nonce.']);

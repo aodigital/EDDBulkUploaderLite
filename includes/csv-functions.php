@@ -1,7 +1,35 @@
 <?php
 
+// Parses a full CSV string into rows using fgetcsv() over an in-memory
+// stream, rather than exploding on "\n" first. Quoted fields containing
+// embedded newlines (e.g. a multi-line download description) previously
+// broke row/column alignment because the naive split happened before CSV
+// parsing; reading through a real stream handles that correctly.
+function edd_bulk_lite_upload_parse_csv_string($csv_content) {
+    $rows = [];
+    $stream = fopen('php://temp', 'r+');
+    fwrite($stream, $csv_content);
+    rewind($stream);
+
+    while (($row = fgetcsv($stream)) !== false) {
+        $has_content = array_filter($row, function ($value) {
+            return $value !== null && $value !== '';
+        });
+        if (empty($has_content)) {
+            continue; // Skip blank rows
+        }
+        $rows[] = $row;
+    }
+
+    fclose($stream);
+    return $rows;
+}
+
 function edd_bulk_lite_upload_edd_generate_csv_callback()
 {
+    if (!current_user_can('manage_options')) {
+        wp_send_json_error('You are not authorized to perform this action.');
+    }
     if (
         !isset($_POST['edd_bulk_lite_upload_nonce']) ||
         !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['edd_bulk_lite_upload_nonce'])), 'edd_bulk_lite_upload')
@@ -109,17 +137,15 @@ function edd_bulk_lite_upload_edd_count_csv_rows_callback()
     // Get CSV file path from the request
     $csv_file_path = isset($_POST['csv_file_path']) ? sanitize_text_field(wp_unslash($_POST['csv_file_path'])) : '';
 
-    // Validate the CSV file path
-    if (empty($csv_file_path) || strpos($csv_file_path, wp_upload_dir()['baseurl']) === false) {
+    // Validate and resolve the CSV file path (anchored to the uploads dir, realpath-contained)
+    $csv_file_path = edd_bulk_lite_upload_resolve_safe_upload_file($csv_file_path);
+
+    if (!$csv_file_path) {
         wp_send_json_error(['message' => 'CSV file path is missing or invalid.']);
         if (get_option('edd_bulk_lite_uploader_php_debugging') === 'on') {
             edd_bulk_lite_debug_log('CSV file path is missing or invalid.');
         }
     }
-
-    // Convert the URL to the file path
-    $uploads_dir = wp_upload_dir();
-    $csv_file_path = str_replace($uploads_dir['baseurl'], $uploads_dir['basedir'], $csv_file_path);
 
     // Initialize the WordPress Filesystem API
     global $wp_filesystem;
@@ -144,33 +170,15 @@ function edd_bulk_lite_upload_edd_count_csv_rows_callback()
     }
 
     // Open the CSV file and count rows
-    $total_rows = 0;
     $csv_content = $wp_filesystem->get_contents($csv_file_path);
 
     if ($csv_content === false) {
         wp_send_json_error(['message' => 'Failed to read the CSV file.']);
     }
 
-    $lines = explode("\n", $csv_content); // Split content into lines
-
-    // Skip the header row
-    if (!empty($lines)) {
-        array_shift($lines); // Remove the first row (header row)
-    }
-
-    // Process each line
-    foreach ($lines as $line) {
-        // Parse each line as CSV
-        $row = str_getcsv($line);
-
-        // Skip blank rows
-        if (!array_filter($row)) {
-            continue;
-        }
-
-        // Increment total row count for valid rows
-        $total_rows++;
-    }
+    $csv_rows = edd_bulk_lite_upload_parse_csv_string($csv_content);
+    array_shift($csv_rows); // Skip the header row
+    $total_rows = count($csv_rows);
 
     // Return the total row count
     wp_send_json_success(['total_rows' => $total_rows]);

@@ -77,6 +77,7 @@ jQuery(document).ready(function ($) {
             data: {
                 action: 'edd_bulk_lite_upload_update_php_debugging_toggle',
                 php_debugging: isChecked,
+                edd_bulk_lite_upload_nonce: edd_bulk_lite_upload_vars.nonce
             },
             success: function (response) {
 
@@ -100,6 +101,7 @@ jQuery(document).ready(function ($) {
             data: {
                 action: 'edd_bulk_lite_upload_update_js_debugging_toggle',
                 js_debugging: isChecked,
+                edd_bulk_lite_upload_nonce: edd_bulk_lite_upload_vars.nonce
             },
             success: function (response) {
 

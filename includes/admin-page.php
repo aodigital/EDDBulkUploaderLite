@@ -140,9 +140,9 @@ function edd_bulk_lite_upload_page_content() {
         </p>
 
         <div class="edd-bulk-intro-buttons">
-            <a href="/wp-admin/edit.php?post_type=download" class="edd-bulk-button">View My Download Items</a>
-            <a href="/wp-admin/admin.php?page=bulk-upload-image-video" class="edd-bulk-button">Bulk Upload Images & Video</a>
-            <a href="/wp-admin/admin.php?page=bulk-upload-options" class="edd-bulk-button">Update Options</a>
+            <a href="<?php echo esc_url(admin_url('edit.php?post_type=download')); ?>" class="edd-bulk-button">View My Download Items</a>
+            <a href="<?php echo esc_url(admin_url('admin.php?page=bulk-upload-image-video')); ?>" class="edd-bulk-button">Bulk Upload Images & Video</a>
+            <a href="<?php echo esc_url(admin_url('admin.php?page=bulk-upload-options')); ?>" class="edd-bulk-button">Update Options</a>
         </div>
     </div>
 
